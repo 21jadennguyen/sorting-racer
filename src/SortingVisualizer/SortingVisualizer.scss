@@ -1,0 +1,53 @@
+.container{
+    flex-direction: row;
+    display: flex;
+    justify-content: space-evenly;
+    height: 89vh;
+
+    .arrayContainer{
+        flex-direction: row;
+        display: flex;
+        justify-content: space-evenly;
+        border-style: solid;
+        align-items: flex-end;
+        width: 50%;
+        .bar1{
+            justify-content: center;
+            margin: 1px;
+            transition: height 1s ease;
+        }
+        .bar2{
+            justify-content: center;
+            margin: 1px;
+            transition: height 1s ease;
+        }
+    }
+}
+
+.bottomBar{
+    flex-direction: row;
+    display: flex;
+    justify-content: space-evenly;
+    height: 10.25vh;
+    border-style: solid;
+    background-color: #001f3f;
+
+    .button{
+        position: relative;
+        top: 25%;
+        height: 50%;
+    }
+
+    .componentBox{
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        contain: strict;
+        
+        .menuItem{
+            color: white;
+        }
+    }
+}
