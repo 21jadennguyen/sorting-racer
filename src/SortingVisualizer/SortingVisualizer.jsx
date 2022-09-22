@@ -262,7 +262,7 @@ export default class SortingVisualizer extends React.Component {
         bars[end].style.backgroundColor = testColor;
         flag = false;
         for (let j = start; j <= end-1; j++){
-            if(flag) return;
+            if (flag) return;
             bars[j].style.backgroundColor = testColor;
 
             await delay(this.state.ANIMATION_DELAY);
@@ -361,7 +361,7 @@ export default class SortingVisualizer extends React.Component {
                             <MenuItem value={1}>Selection Sort</MenuItem>
                             <MenuItem value={2}>Insertion Sort</MenuItem>
                             <MenuItem value={3}>Bubble Sort</MenuItem>
-                            <MenuItem value={3}>Quick Sort</MenuItem>
+                            <MenuItem value={4}>Quick Sort</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
