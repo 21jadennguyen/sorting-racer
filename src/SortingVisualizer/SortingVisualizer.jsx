@@ -51,7 +51,9 @@ export default class SortingVisualizer extends React.Component {
         this.setState({array1, array2})
     }
 
-    resetColors(){
+    async resetColors(){
+        await delay(this.state.ANIMATION_DELAY*5);
+
         let bars1 = document.getElementsByClassName('bar1');
         for (let i = 0; i < bars1.length; i++) {
             bars1[i].style.backgroundColor = array1Color;
@@ -64,12 +66,19 @@ export default class SortingVisualizer extends React.Component {
     }
 
     chooseSort(num, arrNum) {
+        this.resetColors();
         switch (num) {
             case 1:
                 this.selectionSort(arrNum);
                 break;
             case 2:
                 this.insertionSort(arrNum);
+                break;
+            case 3:
+                this.bubbleSort(arrNum);
+                break;
+            case 4:
+                this.quickSort(arrNum);
                 break;
             default:
                 break;
@@ -91,6 +100,7 @@ export default class SortingVisualizer extends React.Component {
 
         flag = false;
         for (let i = 0; i < bars.length; i++) {
+            await delay(this.state.ANIMATION_DELAY);
             let min = i;
             bars[i].style.backgroundColor = testColor;
             for (let j = i+1; j < bars.length; j++) {
@@ -139,9 +149,7 @@ export default class SortingVisualizer extends React.Component {
         flag = false;
         let i, key, j, keyHeight;
         for (i = 1; i < bars.length; i++) {
-            if (flag) {
-                return;
-            }
+            if (flag) return;
             key = arr[i];
             keyHeight = bars[i].style.height;
             bars[i].style.backgroundColor = swappingColor;
@@ -164,6 +172,139 @@ export default class SortingVisualizer extends React.Component {
         for (i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = sortedColor;
         }
+    }
+
+    async bubbleSort(arrNum) {
+        let sorted = false,
+            round = 0,
+            bars = [],
+            arrayColor = '',
+            arr = [];
+        if (arrNum === 1) {
+            arr = this.state.array1;
+            arrayColor = array1Color;
+        } else {
+            arr = this.state.array2;
+            arrayColor = array2Color;
+        }
+        bars = document.getElementsByClassName(`bar${arrNum}`);
+        flag = false;
+        while (!sorted) {
+            sorted = true;
+            for (let i = 0; i < arr.length - 1 - round; i++) {
+                if (flag) return;
+                bars[i].style.backgroundColor = testColor;
+                bars[i+1].style.backgroundColor = testColor;
+                await delay(this.state.ANIMATION_DELAY);
+                if (arr[i] > arr[i + 1]) {
+                    bars[i].style.backgroundColor = swappingColor;
+                    bars[i+1].style.backgroundColor = swappingColor;
+
+                    let temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+
+                    temp = bars[i].style.height;
+                    bars[i].style.height = bars[i+1].style.height;
+                    bars[i+1].style.height = temp;
+
+                    sorted = false;
+                }
+                bars[i].style.backgroundColor = arrayColor;
+                bars[i+1].style.backgroundColor = arrayColor;
+            }
+            bars[arr.length - 1 - round].style.backgroundColor = sortedColor;
+            round++;
+        }
+
+        for (let i = 0; i < bars.length; i++) {
+            bars[i].style.backgroundColor = sortedColor;
+        }
+        return arr;  
+    }
+
+    async quickSort(arrNum) {
+        let bars = []
+        let arrayColor = ''
+        let arr = []
+        if (arrNum === 1) {
+            arr = this.state.array1;
+            arrayColor = array1Color;
+        } else {
+            arr = this.state.array2;
+            arrayColor = array2Color;
+        }
+        bars = document.getElementsByClassName(`bar${arrNum}`);
+        
+        await this.quickSortHelper(arr, 0, arr.length-1, bars, arrayColor);
+
+        for (let i = 0; i < bars.length; i++) {
+            bars[i].style.backgroundColor = sortedColor;
+        }
+    }
+
+    async quickSortHelper(arr, start, end, bars, arrayColor) {
+        if (start < end) {
+            let px = await this.partition(arr, start, end, bars, arrayColor);
+            if (flag) return;
+    
+            await this.quickSortHelper(arr, start, px-1, bars, arrayColor);
+            if (flag) return;
+            await this.quickSortHelper(arr, px+1, end, bars, arrayColor);
+            if (flag) return;
+        }
+    }
+
+    async partition(arr, start, end, bars, arrayColor) {
+        let pivot = arr[end];
+        let i = (start-1)
+
+        bars[end].style.backgroundColor = testColor;
+        flag = false;
+        for (let j = start; j <= end-1; j++){
+            if(flag) return;
+            bars[j].style.backgroundColor = testColor;
+
+            await delay(this.state.ANIMATION_DELAY);
+
+            if (arr[j] < pivot){
+                i++;
+
+                bars[i].style.backgroundColor = swappingColor;
+                bars[j].style.backgroundColor = swappingColor;
+
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+
+                await delay(this.state.ANIMATION_DELAY);
+
+                temp = bars[i].style.height;
+                bars[i].style.height = bars[j].style.height;
+                bars[j].style.height = temp;
+
+                bars[i].style.backgroundColor = arrayColor;
+            }
+            bars[j].style.backgroundColor = arrayColor;
+        }
+
+        bars[i+1].style.backgroundColor = swappingColor;
+        bars[end].style.backgroundColor = swappingColor;
+
+        await delay(this.state.ANIMATION_DELAY);
+
+        let temp = arr[i+1];
+        arr[i+1] = arr[end];
+        arr[end] = temp;
+
+        temp = bars[i+1].style.height;
+        bars[i+1].style.height = bars[end].style.height;
+        bars[end].style.height = temp;
+        
+        bars[i+1].style.backgroundColor = arrayColor;
+        bars[end].style.backgroundColor = arrayColor;
+
+        return (i + 1);
     }
 
     render() {
@@ -204,6 +345,8 @@ export default class SortingVisualizer extends React.Component {
                         >
                             <MenuItem value={1}>Selection Sort</MenuItem>
                             <MenuItem value={2}>Insertion Sort</MenuItem>
+                            <MenuItem value={3}>Bubble Sort</MenuItem>
+                            <MenuItem value={4}>Quick Sort</MenuItem>
                         </Select>
                     </FormControl>
                 </div> 
@@ -217,6 +360,8 @@ export default class SortingVisualizer extends React.Component {
                         >
                             <MenuItem value={1}>Selection Sort</MenuItem>
                             <MenuItem value={2}>Insertion Sort</MenuItem>
+                            <MenuItem value={3}>Bubble Sort</MenuItem>
+                            <MenuItem value={3}>Quick Sort</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
@@ -231,5 +376,3 @@ function delay(n){
         setTimeout(resolve,n);
     });
 }
-
-// Material-ui stuff
