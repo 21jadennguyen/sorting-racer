@@ -100,13 +100,10 @@ export default class SortingVisualizer extends React.Component {
 
         flag = false;
         for (let i = 0; i < bars.length; i++) {
-            await delay(this.state.ANIMATION_DELAY);
             let min = i;
             bars[i].style.backgroundColor = testColor;
             for (let j = i+1; j < bars.length; j++) {
-                if (flag) {
-                    return;
-                }
+                if (flag) return;
                 bars[j].style.backgroundColor = testColor;
                 await delay(this.state.ANIMATION_DELAY);
                 bars[j].style.backgroundColor = arrayColor;
@@ -131,6 +128,7 @@ export default class SortingVisualizer extends React.Component {
             }
             bars[i].style.backgroundColor = sortedColor;
         }
+        this.setState({ANIMATION_DELAY: this.state.ANIMATION_DELAY});
     }
 
     async insertionSort(arrNum){
@@ -172,6 +170,7 @@ export default class SortingVisualizer extends React.Component {
         for (i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = sortedColor;
         }
+        this.setState({ANIMATION_DELAY: this.state.ANIMATION_DELAY});
     }
 
     async bubbleSort(arrNum) {
@@ -220,6 +219,7 @@ export default class SortingVisualizer extends React.Component {
         for (let i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = sortedColor;
         }
+        this.setState({ANIMATION_DELAY: this.state.ANIMATION_DELAY});
         return arr;  
     }
 
@@ -241,6 +241,7 @@ export default class SortingVisualizer extends React.Component {
         for (let i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = sortedColor;
         }
+        this.setState({ANIMATION_DELAY: this.state.ANIMATION_DELAY});
     }
 
     async quickSortHelper(arr, start, end, bars, arrayColor) {
